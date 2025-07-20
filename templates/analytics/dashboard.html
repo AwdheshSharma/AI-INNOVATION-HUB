@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Innovation Hub</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --accent-color: #06b6d4;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --dark-bg: #1e1b4b;
+            --darker-bg: #1e293b;
+            --light-text: #f8fafc;
+            --border-color: #374151;
+            --card-bg: #2d3748;
+            --hover-bg: #4a5568;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+            color: var(--light-text);
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+            color: white;
+        }
+
+        .nav-menu {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: var(--light-text);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--accent-color);
+            border-left-color: var(--accent-color);
+        }
+
+        .nav-item.active {
+            background: var(--hover-bg);
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+        }
+
+        .nav-item i {
+            width: 20px;
+            margin-right: 0.75rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+            background: var(--darker-bg);
+        }
+
+        .topbar {
+            background: var(--card-bg);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 500px;
+            margin: 0 2rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            background: var(--darker-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .notifications {
+            position: relative;
+            background: var(--darker-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--error-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #9ca3af;
+            font-size: 1.1rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon.primary {
+            background: linear-gradient(135deg, var(--primary-color)20, var(--primary-color)40);
+            color: var(--primary-color);
+        }
+
+        .stat-icon.success {
+            background: linear-gradient(135deg, var(--success-color)20, var(--success-color)40);
+            color: var(--success-color);
+        }
+
+        .stat-icon.warning {
+            background: linear-gradient(135deg, var(--warning-color)20, var(--warning-color)40);
+            color: var(--warning-color);
+        }
+
+        .stat-icon.accent {
+            background: linear-gradient(135deg, var(--accent-color)20, var(--accent-color)40);
+            color: var(--accent-color);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .stat-change.positive {
+            color: var(--success-color);
+        }
+
+        .stat-change.negative {
+            color: var(--error-color);
+        }
+
+        /* AI Tools Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(99, 102, 241, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: var(--primary-color);
+        }
+
+        .tool-card:hover::before {
+            opacity: 1;
+        }
+
+        .tool-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tool-icon.image-gen {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+
+        .tool-icon.audio-trans {
+            background: linear-gradient(135deg, #4ecdc4, #7bdbd5);
+            color: white;
+        }
+
+        .tool-icon.sentiment {
+            background: linear-gradient(135deg, #45b7d1, #6cc8e0);
+            color: white;
+        }
+
+        .tool-icon.doc-summary {
+            background: linear-gradient(135deg, #96ceb4, #b5dbc4);
+            color: white;
+        }
+
+        .tool-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tool-description {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tool-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tool-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+            color: white;
+        }
+
+        /* Recent Activity */
+        .activity-section {
+            margin-top: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .view-all-btn {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .view-all-btn:hover {
+            color: var(--secondary-color);
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .activity-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .activity-type {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .activity-content {
+            color: #d1d5db;
+            line-height: 1.5;
+        }
+
+        /* Forms */
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--light-text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--darker-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--light-text);
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: #9ca3af;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .topbar {
+                padding: 1rem;
+            }
+
+            .search-box {
+                display: none;
+            }
+
+            .dashboard-content {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Flash Messages */
+        .flash-messages {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 9999;
+            max-width: 400px;
+        }
+
+        .flash-message {
+            padding: 1rem 1.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            position: relative;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .flash-message.success {
+            background: var(--success-color);
+        }
+
+        .flash-message.error {
+            background: var(--error-color);
+        }
+
+        .flash-message.info {
+            background: var(--accent-color);
+        }
+
+        .flash-message.warning {
+            background: var(--warning-color);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Flash Messages -->
+    <div class="flash-messages" id="flashMessages">
+        <!-- Flash messages will be inserted here via JavaScript -->
+    </div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <span>AI Innovation Hub</span>
+            </div>
+        </div>
+        
+        <div class="nav-menu">
+            <a href="/dashboard" class="nav-item active">
+                <i class="fas fa-tachometer-alt"></i>
+                Dashboard
+            </a>
+            <a href="/tools/image-generation" class="nav-item">
+                <i class="fas fa-image"></i>
+                Image Generation
+            </a>
+            <a href="/tools/audio-transcription" class="nav-item">
+                <i class="fas fa-microphone"></i>
+                Audio Transcription
+            </a>
+            <a href="/tools/sentiment-analysis" class="nav-item">
+                <i class="fas fa-heart"></i>
+                Sentiment Analysis
+            </a>
+            <a href="/tools/document-summary" class="nav-item">
+                <i class="fas fa-file-alt"></i>
+                Document Summary
+            </a>
+            <a href="/analytics" class="nav-item">
+                <i class="fas fa-chart-bar"></i>
+                Analytics
+            </a>
+            <div style="border-top: 1px solid var(--border-color); margin: 1rem 0;"></div>
+            <a href="#" class="nav-item">
+                <i class="fas fa-cog"></i>
+                Settings
+            </a>
+            <a href="/auth/logout" class="nav-item">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <button class="btn-menu d-md-none" id="toggleSidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search AI tools, projects, or help...">
+            </div>
+            
+            <div class="user-profile">
+                <div class="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                <div class="user-avatar">
+                    <!-- {{ current_user.first_name[0] if current_user.first_name else current_user.username[0] }}{{ current_user.last_name[0] if current_user.last_name else '' }} -->
+                <span>Robot Ai</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="dashboard-content">
+            <div class="page-header fade-in-up">
+                <!-- <h1 class="page-title">Welcome back, {{ current_user.get_full_name() }}!</h1> -->
+                 <h1 class="page-title">Welcome back, Robot Ai!</h1>
+                <p class="page-subtitle">Here's what's happening with your AI projects today.</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid fade-in-up">
+                <div class="stat-card">
+                    <div class="stat-icon primary">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <!-- <div class="stat-number">{{ stats.image_generations }}</div> -->
+                     <div class="stat-number">120</div>
+                    <div class="stat-label">Images Generated</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+12% from last week</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <!-- <div class="stat-number">{{ stats.audio_transcriptions }}</div> -->
+                     <div class="stat-number">20</div>
+                    <div class="stat-label">Audio Transcribed</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+8% from last week</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <!-- <div class="stat-number">{{ stats.sentiment_analyses }}</div> -->
+                     <div class="stat-number">150</div>
+                    <div class="stat-label">Sentiment Analyzed</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+15% from last week</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon accent">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <!-- <div class="stat-number">{{ stats.document_summaries }}</div> -->
+                    <div class="stat-number">55</div>  
+                    <div class="stat-label">Documents Summarized</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+5% from last week</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Tools -->
+            <div class="tools-grid fade-in-up">
+                <div class="tool-card">
+                    <div class="tool-icon image-gen">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3 class="tool-title">Image Generation</h3>
+                    <p class="tool-description">Create stunning AI-generated images from text descriptions using advanced models like DALL-E and Stable Diffusion.</p>
+                    <a href="/tools/image-generation" class="tool-button">Generate Images</a>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon audio-trans">
+                        <i class="fas fa-headphones"></i>
+                    </div>
+                    <h3 class="tool-title">Audio Transcription</h3>
+                    <p class="tool-description">Convert audio files to accurate text transcriptions with speaker identification and timestamp support.</p>
+                    <a href="/tools/audio-transcription" class="tool-button">Transcribe Audio</a>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon sentiment">
+                        <i class="fas fa-smile"></i>
+                    </div>
+                    <h3 class="tool-title">Sentiment Analysis</h3>
+                    <p class="tool-description">Analyze the emotional tone and sentiment of text content with detailed insights and confidence scores.</p>
+                    <a href="/tools/sentiment-analysis" class="tool-button">Analyze Sentiment</a>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon doc-summary">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3 class="tool-title">Document Summary</h3>
+                    <p class="tool-description">Get intelligent summaries of long documents, PDFs, and articles with key points extraction.</p>
+                    <a href="/tools/document-summary" class="tool-button">Summarize Documents</a>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <section class="activity-section fade-in-up">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Activity</h2>
+                    <a href="/analytics" class="view-all-btn">View All →</a>
+                </div>
+                
+                <div class="activity-grid">
+                    <div class="activity-card">
+                        <div class="activity-header">
+                            <span class="activity-type">Image Generation</span>
+                            <span class="activity-time">2 hours ago</span>
+                        </div>
+                        <div class="activity-content">
+                            Generated "Futuristic cityscape at sunset" using DALL-E 3
+                        </div>
+                    </div>
+
+                    <div class="activity-card">
+                        <div class="activity-header">
+                            <span class="activity-type">Audio Transcription</span>
+                            <span class="activity-time">5 hours ago</span>
+                        </div>
+                        <div class="activity-content">
+                            Transcribed meeting recording (45 minutes) with 98% accuracy
+                        </div>
+                    </div>
+
+                    <div class="activity-card">
+                        <div class="activity-header">
+                            <span class="activity-type">Document Summary</span>
+                            <span class="activity-time">1 day ago</span>
+                        </div>
+                        <div class="activity-content">
+                            Summarized research paper "AI in Healthcare" (24 pages)
+                        </div>
+                    </div>
+
+                    <div class="activity-card">
+                        <div class="activity-header">
+                            <span class="activity-type">Sentiment Analysis</span>
+                            <span class="activity-time">2 days ago</span>
+                        </div>
+                        <div class="activity-content">
+                            Analyzed customer feedback batch (150 reviews) - 85% positive sentiment
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sidebar toggle for mobile
+        document.getElementById('toggleSidebar')?.addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+
+        // Flash messages
+        function showFlashMessage(message, type = 'info') {
+            const flashContainer = document.getElementById('flashMessages');
+            const flashDiv = document.createElement('div');
+            flashDiv.className = `flash-message ${type}`;
+            flashDiv.textContent = message;
+            
+            flashContainer.appendChild(flashDiv);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                flashDiv.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    flashContainer.removeChild(flashDiv);
+                }, 300);
+            }, 5000);
+        }
+
+        // Active nav item
+        const currentPath = window.location.pathname;
+        document.querySelectorAll('.nav-item').forEach(item => {
+            if (item.getAttribute('href') === currentPath) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+
+        // Smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Loading animation for tool cards
+        document.querySelectorAll('.tool-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const originalText = this.textContent;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                
+                // Reset after navigation (this won't execute if navigation occurs)
+                setTimeout(() => {
+                    this.textContent = originalText;
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
